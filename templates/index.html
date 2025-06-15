@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="ky">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Триаж Ассистенти | Медициналык ЖИ жардамчысы</title>
+    <title>AI Triage Assistant | Medical AI Helper</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../static/style.css">
-    <script src="../static/script.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 </head>
-<body class="gradient-bg min-h-screen">
+<body class="gradient-bg min-h-screen text-gray-100 font-sans">
     <div class="relative overflow-hidden">
         <div class="scan-line"></div>
 
@@ -21,11 +20,12 @@
                         <i class="fas fa-robot text-white text-xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-bold">AI Триаж Ассистенти</h1>
-                        <p class="text-cyan-300">Оорулуулардын алдын ала классификациясы үчүн ЖИ жардамчысы</p>
+                        <h1 class="text-3xl font-bold">AI Triage Assistant</h1>
+                        <p class="text-cyan-300">AI assistant for preliminary patient classification</p>
                     </div>
                 </div>
-                <div class="dna-animation w-full md:w-auto max-w-xs md:max-w-sm"> <div class="dna-strand"></div>
+                <div class="dna-animation w-full md:w-auto max-w-xs md:max-w-sm">
+                    <div class="dna-strand"></div>
                 </div>
             </div>
         </header>
@@ -34,16 +34,13 @@
             <div class="max-w-4xl mx-auto">
                 <div class="bg-gray-800 bg-opacity-50 backdrop-blur-lg rounded-xl p-6 mb-8 border border-cyan-500 border-opacity-30 shadow-lg">
                     <h2 class="text-2xl font-semibold mb-4 text-cyan-300 flex items-center">
-                        <i class="fas fa-comment-medical mr-3"></i> Сиздин симптомдорду жазыңыз
+                        <i class="fas fa-comment-medical mr-3"></i> Describe Your Symptoms
                     </h2>
                     <div class="relative">
-                        <textarea id="symptomsInput" class="w-full bg-gray-900 bg-opacity-70 text-gray-100 rounded-lg p-4 border border-gray-700 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 transition duration-200 h-32" placeholder="Мисалы: баш ооруп жатат, дене табы 38°С..."></textarea>
-                        <div class="flex justify-between items-center mt-2">
-{#                            <div class="text-sm text-gray-400">#}
-{#                                <i class="fas fa-info-circle mr-1"></i> Чем подробнее описание, тем точнее анализ#}
-{#                            </div>#}
+                        <textarea id="symptomsInput" class="w-full bg-gray-900 bg-opacity-70 text-gray-100 rounded-lg p-4 border border-gray-700 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 transition duration-200 h-32" placeholder="e.g., I have a headache and a temperature of 38°C..."></textarea>
+                        <div class="flex justify-end items-center mt-2">
                             <button id="analyzeBtn" class="bg-cyan-600 hover:bg-cyan-500 text-white font-medium py-2 px-6 rounded-lg flex items-center transition duration-200 transform hover:scale-105">
-                                <i class="fas fa-brain mr-2"></i> Анализдөө
+                                <i class="fas fa-brain mr-2"></i> Analyze
                             </button>
                         </div>
                     </div>
@@ -53,105 +50,79 @@
                     <p id="errorMessage" class="text-red-200"></p>
                 </div>
 
-                <div id="resultsSection" class="hidden bg-gray-800 bg-opacity-50 backdrop-blur-lg rounded-xl p-6 mb-8 border border-cyan-500 border-opacity-30 shadow-lg">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-semibold text-cyan-300 flex items-center">
-                            <i class="fas fa-chart-line mr-3"></i> Жыйынтыктар
-                        </h2>
-                        <div id="severityBadge" class="px-4 py-1 rounded-full text-sm font-medium hidden">
-                            <i class="fas fa-exclamation-triangle mr-1"></i>
-                            <span id="severityText"></span>
+                <div id="resultsSection" class="hidden">
+                    <div id="emergencyWarning" class="hidden bg-red-900 bg-opacity-80 rounded-xl p-6 mb-8 border-2 border-red-500 shadow-lg animate-pulse">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-triangle text-4xl text-red-300 mr-4"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-red-200 mb-2">EMERGENCY ASSISTANCE NEEDED!</h3>
+                                <p class="text-red-100 mb-4">Based on your symptoms, our system has identified a potentially life-threatening condition. Please call emergency services immediately or go to the nearest emergency room.</p>
+                                <div class="flex flex-wrap gap-3">
+                                    <a href="tel:911" class="bg-red-600 hover:bg-red-500 text-white font-medium py-2 px-4 rounded-lg flex items-center">
+                                        <i class="fas fa-phone-alt mr-2"></i> Call Emergency (911)
+                                    </a>
+                                    <button class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg flex items-center">
+                                        <i class="fas fa-map-marker-alt mr-2"></i> Find Nearby Hospitals
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-lg rounded-xl p-6 mb-8 border border-cyan-500 border-opacity-30 shadow-lg">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-semibold text-cyan-300 flex items-center">
+                                <i class="fas fa-chart-line mr-3"></i> Analysis Results
+                            </h2>
+                            <div id="severityBadge" class="px-4 py-1 rounded-full text-sm font-medium hidden">
+                                <span id="severityText"></span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div class="bg-gray-900 bg-opacity-70 rounded-lg p-4 border border-gray-700 flex flex-col">
+                                <h3 class="font-medium text-center mb-4">Severity Level</h3>
+                                <div class="flex-grow flex items-center justify-center">
+                                    <div class="w-full h-4 bg-gray-800 rounded-full overflow-hidden border border-gray-600">
+                                        <div id="severityProgress" class="h-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 transition-all duration-1000" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-900 bg-opacity-70 rounded-lg p-4 border border-gray-700">
+                                <h3 class="font-medium text-center mb-3">Recommended Specialist</h3>
+                                <div id="specialistContainer" class="flex flex-col items-center justify-center py-2">
+                                    <div id="specialistIcon" class="text-4xl mb-2 text-cyan-400"></div>
+                                    <h4 id="specialistName" class="text-lg font-medium text-center"></h4>
+                                    <p id="specialistDescription" class="text-sm text-gray-300 text-center mt-1"></p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-900 bg-opacity-70 rounded-lg p-4 border border-gray-700">
+                                <h3 class="font-medium text-center mb-3">Urgency</h3>
+                                <div id="urgencyContainer" class="flex flex-col items-center justify-center py-2">
+                                    <div id="urgencyIcon" class="text-4xl mb-2"></div>
+                                    <h4 id="urgencyText" class="text-lg font-medium text-center"></h4>
+                                    <p id="urgencyDescription" class="text-sm text-gray-300 text-center mt-1"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-900 bg-opacity-70 rounded-lg p-4 border border-gray-700 mb-6">
+                            <h3 class="font-medium text-cyan-400 mb-3">AI Analysis Details</h3>
+                            <div id="detailedAnalysis" class="space-y-2">
+                                <p id="originalComplaintText" class="mb-2 text-sm text-gray-400"></p>
+                                <p id="processedComplaintText" class="mb-4 text-xs text-gray-500"></p>
+                                </div>
+                        </div>
+
                         <div class="bg-gray-900 bg-opacity-70 rounded-lg p-4 border border-gray-700">
-                            <div class="flex items-center mb-3">
-                                <div class="w-10 h-10 rounded-full bg-cyan-900 flex items-center justify-center mr-3">
-                                    <i class="fas fa-bolt text-cyan-400"></i>
+                             <h3 class="font-medium text-cyan-400 mb-3">Possible Conditions (Demo)</h3>
+                            <div id="conditionsList" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 </div>
-                                <h3 class="font-medium">Коркунуч деңгээли</h3>
-                            </div>
-                            <div class="flex items-center justify-center py-4">
-                                <div id="severityMeter" class="w-full h-4 bg-gray-800 rounded-full overflow-hidden">
-                                    <div id="severityProgress" class="h-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 transition-all duration-1000" style="width: 0%"></div>
-                                </div>
-                            </div>
-                            <p id="severityDescription" class="text-sm text-gray-300 italic"></p>
-                        </div>
-
-                        <div class="bg-gray-900 bg-opacity-70 rounded-lg p-4 border border-gray-700">
-                            <div class="flex items-center mb-3">
-                                <div class="w-10 h-10 rounded-full bg-cyan-900 flex items-center justify-center mr-3">
-                                    <i class="fas fa-user-md text-cyan-400"></i>
-                                </div>
-                                <h3 class="font-medium">Сунушталган дарыгер</h3>
-                            </div>
-                            <div id="specialistContainer" class="flex flex-col items-center justify-center py-4">
-                                <div id="specialistIcon" class="text-4xl mb-2 text-cyan-400"></div>
-                                <h4 id="specialistName" class="text-lg font-medium text-center"></h4>
-                                <p id="specialistDescription" class="text-sm text-gray-300 text-center mt-1"></p>
-                            </div>
-                        </div>
-
-                        <div class="bg-gray-900 bg-opacity-70 rounded-lg p-4 border border-gray-700">
-                            <div class="flex items-center mb-3">
-                                <div class="w-10 h-10 rounded-full bg-cyan-900 flex items-center justify-center mr-3">
-                                    <i class="fas fa-clock text-cyan-400"></i>
-                                </div>
-                                <h3 class="font-medium">Срочтуулук:</h3>
-                            </div>
-                            <div id="urgencyContainer" class="flex flex-col items-center justify-center py-4">
-                                <div id="urgencyIcon" class="text-4xl mb-2"></div>
-                                <h4 id="urgencyText" class="text-lg font-medium text-center"></h4>
-                                <p id="urgencyDescription" class="text-sm text-gray-300 text-center mt-1"></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-900 bg-opacity-70 rounded-lg p-4 border border-gray-700 mb-6">
-                        <div class="flex items-center mb-3">
-                            <div class="w-10 h-10 rounded-full bg-cyan-900 flex items-center justify-center mr-3">
-                                <i class="fas fa-microscope text-cyan-400"></i>
-                            </div>
-                            <h3 class="font-medium">Толук талдоо</h3>
-                        </div>
-                        <div id="detailedAnalysis" class="prose prose-sm max-w-none text-gray-200">
-                             <p id="originalComplaintText" class="mb-2 text-sm text-gray-400"></p>
-                             <p id="processedComplaintText" class="mb-4 text-sm text-gray-500"></p>
-                            <p id="aiResponse" class="typing-animation"></p>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-900 bg-opacity-70 rounded-lg p-4 border border-gray-700">
-                        <div class="flex items-center mb-3">
-                            <div class="w-10 h-10 rounded-full bg-cyan-900 flex items-center justify-center mr-3">
-                                <i class="fas fa-disease text-cyan-400"></i>
-                            </div>
-                            <h3 class="font-medium">Ыктымалдуу абалдар (Демо)</h3>
-                        </div>
-                        <div id="conditionsList" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            </div>
-                         <p class="text-xs text-gray-500 mt-2">Бул курал алдын ала маалымат үчүн гана. Ар дайым дарыгерге кайрылгыла.</p>
-                    </div>
-                </div>
-
-                <div id="emergencyWarning" class="hidden bg-red-900 bg-opacity-70 rounded-xl p-6 mb-8 border border-red-500 shadow-lg">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-exclamation-triangle text-3xl text-red-300 mr-4"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-red-200 mb-2">ТЕЗ ЖАРДАМ КЕРЕК!</h3>
-                            <p class="text-red-100 mb-4">Сиздин белгилериңизге жараша, биздин система жашоого коркунуч жараткан абалды аныкташы мүмкүн. Дароо 103 номерине тез жардам чакырыңыз же жакынкы тез жардам бөлүмүнө кайрылыңыз.</p>
-                            <div class="flex flex-wrap gap-3">
-                                <button class="bg-red-600 hover:bg-red-500 text-white font-medium py-2 px-4 rounded-lg flex items-center">
-                                    <i class="fas fa-phone-alt mr-2"></i> Тез жардам чакыруу (103)
-                                </button>
-                                <button class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg flex items-center">
-                                    <i class="fas fa-map-marker-alt mr-2"></i> Жакынкы ооруканаларды көрсөтүү
-                                </button>
-                            </div>
+                            <p class="text-xs text-gray-500 mt-4 italic">*Disclaimer: This tool is for informational purposes only. Always consult a medical professional for diagnosis.</p>
                         </div>
                     </div>
                 </div>
@@ -160,12 +131,12 @@
 
         <footer class="container mx-auto px-4 py-8 text-center text-gray-400 text-sm">
             <div class="border-t border-gray-800 pt-8">
-                <p>AI Triage Assistant v2.3.5 | Алдын ала диагностика үчүн медициналык ИИ-ассистент</p>
-                <p class="mt-2">Бул курал медициналык адистин кеңешин алмаштырбайт. Ар дайым дарыгер менен кеңешиңиз.</p>
+                <p>AI Triage Assistant v2.3.5 | Medical AI assistant for preliminary diagnostics</p>
+                <p class="mt-2">This tool does not replace professional medical advice. Always consult with a doctor.</p>
                 <div class="flex justify-center space-x-4 mt-4">
-                    <a href="#" class="text-cyan-400 hover:text-cyan-300"><i class="fas fa-shield-alt"></i> Купуялуулук</a>
-                    <a href="#" class="text-cyan-400 hover:text-cyan-300"><i class="fas fa-file-alt"></i> Шарттар</a>
-                    <a href="#" class="text-cyan-400 hover:text-cyan-300"><i class="fas fa-question-circle"></i> Жардам</a>
+                    <a href="#" class="text-cyan-400 hover:text-cyan-300"><i class="fas fa-shield-alt"></i> Privacy</a>
+                    <a href="#" class="text-cyan-400 hover:text-cyan-300"><i class="fas fa-file-alt"></i> Terms</a>
+                    <a href="#" class="text-cyan-400 hover:text-cyan-300"><i class="fas fa-question-circle"></i> Help</a>
                 </div>
             </div>
         </footer>

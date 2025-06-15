@@ -1,126 +1,120 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // --- Element Selectors ---
     const analyzeBtn = document.getElementById('analyzeBtn');
     const symptomsInput = document.getElementById('symptomsInput');
     const resultsSection = document.getElementById('resultsSection');
+    const errorSection = document.getElementById('errorSection');
+    const errorMessageEl = document.getElementById('errorMessage');
+
+    // --- Result Display Elements ---
     const emergencyWarning = document.getElementById('emergencyWarning');
     const severityProgress = document.getElementById('severityProgress');
     const severityText = document.getElementById('severityText');
-    const severityDescription = document.getElementById('severityDescription');
     const severityBadge = document.getElementById('severityBadge');
     const specialistName = document.getElementById('specialistName');
     const specialistDescription = document.getElementById('specialistDescription');
     const specialistIcon = document.getElementById('specialistIcon');
-    const urgencyTextEl = document.getElementById('urgencyText'); // Бул элементтин атын өзгөрттүм (мурда severityText менен бирдей болчу)
+    const urgencyTextEl = document.getElementById('urgencyText');
     const urgencyDescriptionEl = document.getElementById('urgencyDescription');
     const urgencyIconEl = document.getElementById('urgencyIcon');
 
-    // Толук талдоо үчүн жаңы элементтер
-    const detailedAnalysisContainer = document.getElementById('detailedAnalysis'); // <--- ЖАҢЫ
+    // --- Detailed Analysis Elements ---
+    const detailedAnalysisContainer = document.getElementById('detailedAnalysis');
     const originalComplaintTextEl = document.getElementById('originalComplaintText');
-    const enhancedComplaintTextEl = document.createElement('p'); // <--- ЖАҢЫ (динамикалык түрдө кошулат)
+    const enhancedComplaintTextEl = document.createElement('p');
     enhancedComplaintTextEl.className = 'mb-2 text-sm text-gray-400';
     const processedComplaintTextEl = document.getElementById('processedComplaintText');
-    const geminiExplanationEl = document.createElement('div'); // <--- ЖАҢЫ
+    const geminiExplanationEl = document.createElement('div');
     geminiExplanationEl.className = 'mt-4 prose prose-sm max-w-none text-gray-200';
-
-
     const conditionsList = document.getElementById('conditionsList');
-    const errorSection = document.getElementById('errorSection');
-    const errorMessageEl = document.getElementById('errorMessage');
 
-    // `aiResponseEl` деп өзгөрттүм, анткени бул Gemini'нин жалпы жообу үчүн болчу, эми деталдаштырабыз
-    // const aiResponseEl = document.getElementById('aiResponse'); // Бул элемент эми колдонулбайт, ордуна geminiExplanationEl ж.б.
+    // Backend API URL
+    const backendUrl = 'http://127.0.0.1:5000/predict'; // Your Flask server address
 
-    const backendUrl = 'http://127.0.0.1:5000/predict'; // Flask сервериңиздин дареги
+    // --- Data Mappings (Translated to English) ---
 
-    // Адистер жана шашылыш деңгээлдери боюнча маалыматтар (өзгөргөн жок)
+    // Note: Keys must be lowercase to match backend output and script logic.
     const specialistsData = {
-        'терапевт': { icon: 'fas fa-stethoscope', description: 'Кеңири профилдеги ооруларды аныктоо жана дарылоо боюнча жалпы адис.' },
-        'невролог': { icon: 'fas fa-brain', description: 'Нерв системасынын ооруларын, баш ооруну, уйкусуздукту дарылайт.' },
-        'кардиолог': { icon: 'fas fa-heartbeat', description: 'Жүрөк жана кан тамыр оорулары боюнча адис.' },
-        'гастроэнтеролог': {icon: 'fas fa-pills', description: 'Ашказан-ичеги жолдорунун ооруларына адистешкен дарыгер.' }, // Иконканы туураладым
-        'пульмонолог': { icon: 'fas fa-lungs', description: 'Өпкө жана дем алуу жолдорунун оорулары боюнча адис.' },
-        'уролог': {icon: 'fas fa-toilet-paper', description: 'Заара чыгаруу системасынын ооруларын дарылайт.' },  // Иконканы туураладым
-        'эндокринолог': { icon: 'fas fa-cogs', description: 'Гормоналдык бузулууларды жана зат алмашуу ооруларын дарылайт.' }, // Иконканы туураладым
-        'дерматолог': {icon: 'fas fa-hand-sparkles', description: 'Тери, чач жана тырмак оорулары боюнча адис.' }, // Иконканы туураладым
-        'офтальмолог': { icon: 'fas fa-eye', description: 'Көз ооруларына адистешкен дарыгер.' },
-        'лор': {icon: 'fas fa-head-side-cough', description: 'Кулак, мурун, тамак оорулары боюнча адис (отоларинголог).' }, // Иконканы туураладым
-        'хирург': { icon: 'fas fa-band-aid', description: 'Операциялык кийлигишүүнү талап кылган ооруларды дарылоочу адис.' }, // Иконканы туураладым
-        'травматолог': { icon: 'fas fa-procedures', description: 'Жаракаттарды, сыныктарды жана таяныч-кыймыл аппаратынын ооруларын дарылайт.' }, // Иконканы туураладым
-        'педиатр': { icon: 'fas fa-baby', description: 'Балдардын ден соолугу жана оорулары боюнча адис.' },
-        'гинеколог': { icon: 'fas fa-venus', description: 'Аялдардын ден соолугу жана репродуктивдик системасы боюнча адис.' },
-        'стоматолог': { icon: 'fas fa-tooth', description: 'Тиш жана ооз көңдөйүнүн ооруларын дарылоочу дарыгер.' },
-        'психотерапевт': { icon: 'fas fa-comment-medical', description: 'Психикалык ден соолук жана эмоционалдык маселелер боюнча адис.' },
-        'нефролог': { icon: 'fas fa-kidneys', description: 'Бөйрөк оорулары боюнча адис.' },
-        'аллерголог': { icon: 'fas fa-allergies', description: 'Аллергиялык реакциялар жана оорулар боюнча адис.' },
-        'ревматолог': { icon: 'fas fa-joint', description: 'Муун жана тутумдаштыргыч ткандардын оорулары боюнча адис.'},
-        'флеболог': { icon: 'fas fa-water', description: 'Вена (кан тамыр) оорулары боюнча адис.'}, // Иконканы туураладым
-        'пульмонолог': { icon: 'fas fa-lungs', description: 'Өпкө жана дем алуу жолдорунун оорулары боюнча адис.' },
-        'проктолог': { icon: 'fas fa-poop', description: 'Көтөн чучук жана ага жакын органдардын оорулары боюнча адис.'},
-        'не определено': { icon: 'fas fa-question-circle', description: 'Дарыгер так аныкталган жок. Сураныч, белгилериңизди кененирээк жазыңыз.' },
-        'хирург/травматолог': { icon: 'fas fa-procedures', description: 'Жаракаттарды, сыныктарды жана операцияны талап кылган кырдаалдарда жардам берет.' },
-         'педиатр/дерматолог': { icon: 'fas fa-baby', description: 'Балдардын тери оорулары боюнча адис.' },
-         'терапевт/невролог': { icon: 'fas fa-stethoscope', description: 'Жалпы терапиялык жана нерв системасы маселелери боюнча жардам берет.' },
-         'хирург/флеболог': { icon: 'fas fa-band-aid', description: 'Вена оорулары жана хирургиялык кийлигишүүлөр боюнча адис.' },
-         'педиатр/хирург': { icon: 'fas fa-baby', description: 'Балдар хирургиясы боюнча адис.' },
-         'стоматолог/невролог': { icon: 'fas fa-tooth', description: 'Тиш жана жаак-бет аймагындагы неврологиялык маселелер боюнча адис.' },
-         'лор/терапевт': { icon: 'fas fa-head-side-cough', description: 'Кулак-мурун-тамак жана жалпы терапиялык маселелер боюнча адис.' },
-         'терапевт/проктолог': { icon: 'fas fa-stethoscope', description: 'Жалпы терапиялык жана проктологиялык маселелер боюнча адис.' },
-         'невролог/хирург': { icon: 'fas fa-brain', description: 'Нерв системасынын хирургиялык дарылоону талап кылган оорулары боюнча адис.' },
-         'кардиолог/терапевт': { icon: 'fas fa-heartbeat', description: 'Жүрөк-кан тамыр жана жалпы терапиялык маселелер боюнча адис.' },
-         'невролог/травматолог': { icon: 'fas fa-brain', description: 'Нерв системасынын жаракаттары жана травматологиялык маселелер боюнча адис.' },
-         'гастроэнтеролог/терапевт': { icon: 'fas fa-pills', description: 'Ашказан-ичеги жана жалпы терапиялык маселелер боюнча адис.' }
+        'general practitioner': { icon: 'fas fa-stethoscope', description: 'General specialist for diagnosing and treating a wide range of diseases.' },
+        'neurologist': { icon: 'fas fa-brain', description: 'Treats nervous system disorders, headaches, and sleep issues.' },
+        'cardiologist': { icon: 'fas fa-heartbeat', description: 'Specialist in heart and blood vessel diseases.' },
+        'gastroenterologist': { icon: 'fas fa-pills', description: 'Specializes in diseases of the gastrointestinal tract.' },
+        'pulmonologist': { icon: 'fas fa-lungs', description: 'Specialist in lung and respiratory diseases.' },
+        'urologist': { icon: 'fas fa-toilet-paper', description: 'Treats diseases of the urinary system.' },
+        'endocrinologist': { icon: 'fas fa-cogs', description: 'Treats hormonal disorders and metabolic diseases.' },
+        'dermatologist': { icon: 'fas fa-hand-sparkles', description: 'Specialist in skin, hair, and nail diseases.' },
+        'ophthalmologist': { icon: 'fas fa-eye', description: 'Doctor specializing in eye diseases.' },
+        'ent (otolaryngologist)': { icon: 'fas fa-head-side-cough', description: 'Specialist in ear, nose, and throat diseases (otolaryngologist).' },
+        'surgeon': { icon: 'fas fa-band-aid', description: 'Specialist who treats diseases requiring surgical intervention.' },
+        'traumatologist': { icon: 'fas fa-procedures', description: 'Treats injuries, fractures, and musculoskeletal system diseases.' },
+        'pediatrician': { icon: 'fas fa-baby', description: 'Specialist in children\'s health and diseases.' },
+        'gynecologist': { icon: 'fas fa-venus', description: 'Specialist in women\'s health and the reproductive system.' },
+        'dentist': { icon: 'fas fa-tooth', description: 'Doctor who treats diseases of the teeth and oral cavity.' },
+        'psychotherapist': { icon: 'fas fa-comment-medical', description: 'Specialist in mental health and emotional issues.' },
+        'nephrologist': { icon: 'fas fa-kidneys', description: 'Specialist in kidney diseases.' },
+        'allergist': { icon: 'fas fa-allergies', description: 'Specialist in allergic reactions and diseases.' },
+        'rheumatologist': { icon: 'fas fa-joint', description: 'Specialist in joint and connective tissue diseases.' },
+        'phlebologist': { icon: 'fas fa-water', description: 'Specialist in vein (blood vessel) diseases.' },
+        'proctologist': { icon: 'fas fa-poop', description: 'Specialist in diseases of the rectum and adjacent organs.' },
+        'undetermined': { icon: 'fas fa-question-circle', description: 'The specialist could not be determined. Please describe your symptoms in more detail.' },
+        // Combined specialists
+        'surgeon/traumatologist': { icon: 'fas fa-procedures', description: 'Helps with injuries, fractures, and situations requiring surgery.' },
+        'pediatrician/dermatologist': { icon: 'fas fa-baby', description: 'Specialist in children\'s skin diseases.' },
+        'general practitioner/neurologist': { icon: 'fas fa-stethoscope', description: 'Assists with general therapeutic and nervous system issues.' },
+        'surgeon/phlebologist': { icon: 'fas fa-band-aid', description: 'Specialist in vein diseases and surgical interventions.' },
+        'pediatrician/surgeon': { icon: 'fas fa-baby', description: 'Specialist in pediatric surgery.' },
+        'dentist/neurologist': { icon: 'fas fa-tooth', description: 'Specialist in dental and maxillofacial neurological issues.' },
+        'ent/general practitioner': { icon: 'fas fa-head-side-cough', description: 'Specialist in ENT and general therapeutic issues.' },
+        'general practitioner/proctologist': { icon: 'fas fa-stethoscope', description: 'Assists with general therapeutic and proctological issues.' },
+        'neurologist/surgeon': { icon: 'fas fa-brain', description: 'Specialist in nervous system diseases requiring surgical treatment.' },
+        'cardiologist/general practitioner': { icon: 'fas fa-heartbeat', description: 'Assists with cardiovascular and general therapeutic issues.' },
+        'neurologist/traumatologist': { icon: 'fas fa-brain', description: 'Specialist in nervous system injuries and traumatological issues.' },
+        'gastroenterologist/general practitioner': { icon: 'fas fa-pills', description: 'Assists with gastrointestinal and general therapeutic issues.' }
     };
 
+    // Note: Keys must match the exact output from the Python backend.
     const urgencyMapping = {
-        'Красный': { key: 'immediate', severityScore: 95, badgeColor: 'bg-red-600 text-red-100', text: 'Критикалык' },
-        'Оранжевый': { key: 'urgent', severityScore: 75, badgeColor: 'bg-orange-600 text-orange-100', text: 'Жогорку' },
-        'Желтый': { key: 'soon', severityScore: 50, badgeColor: 'bg-yellow-600 text-yellow-100', text: 'Орточо' },
-        'Зеленый': { key: 'routine', severityScore: 25, badgeColor: 'bg-green-600 text-green-100', text: 'Төмөн' },
-        'Аныкталган жок': { key: 'unknown', severityScore: 0, badgeColor: 'bg-gray-600 text-gray-100', text: 'Белгисиз' }, // <--- ӨЗГӨРТҮЛДҮ
-        'Не определено': { key: 'unknown', severityScore: 0, badgeColor: 'bg-gray-600 text-gray-100', text: 'Белгисиз' } // <--- Кошумча вариант
+        'Red': { key: 'immediate', severityScore: 95, badgeColor: 'bg-red-600 text-red-100', text: 'Critical' },
+        'Orange': { key: 'urgent', severityScore: 75, badgeColor: 'bg-orange-600 text-orange-100', text: 'High' },
+        'Yellow': { key: 'soon', severityScore: 50, badgeColor: 'bg-yellow-600 text-yellow-100', text: 'Medium' },
+        'Green': { key: 'routine', severityScore: 25, badgeColor: 'bg-green-600 text-green-100', text: 'Low' },
+        'Undetermined': { key: 'unknown', severityScore: 0, badgeColor: 'bg-gray-600 text-gray-100', text: 'Unknown' }
     };
 
-   const urgencyLevelsDetails = {
+    const urgencyLevelsDetails = {
         'immediate': {
-            text: 'Дароо жардам',
-            description: 'Өмүргө коркунуч туулушу мүмкүн. Тез арада медициналык жардам талап кылынат!',
+            text: 'Immediate Care',
+            description: 'Potentially life-threatening. Immediate medical attention is required!',
             icon: 'fas fa-ambulance text-red-500'
         },
         'urgent': {
-            text: 'Шашылыш',
-            description: '24 сааттын ичинде дарыгерге кайрылуу сунушталат.',
+            text: 'Urgent',
+            description: 'It is recommended to see a doctor within 24 hours.',
             icon: 'fas fa-exclamation-triangle text-orange-500'
         },
         'soon': {
-            text: 'Жакын арада',
-            description: 'Жакынкы күндөрү дарыгерге кайрылуу пландаштырылышы керек.',
+            text: 'Soon',
+            description: 'A visit to the doctor should be planned in the coming days.',
             icon: 'fas fa-clock text-yellow-500'
         },
         'routine': {
-            text: 'Пландуу',
-            description: 'Пландуу түрдө дарыгерге кайрылсаңыз болот.',
+            text: 'Routine',
+            description: 'You can schedule a routine visit to the doctor.',
             icon: 'fas fa-calendar-check text-green-500'
         },
         'unknown': {
-            text: 'Белгисиз',
-            description: 'Шашылыш деңгээли аныкталган жок. Белгилериңизди толугураак жазыңыз.',
+            text: 'Unknown',
+            description: 'The urgency level could not be determined. Please provide more details about your symptoms.',
             icon: 'fas fa-question-circle text-gray-500'
         }
     };
-
-
-    // Бул демо маалыматтар, Gemini'ден чыныгы маалыматтарды алууга болот
-    const sampleConditions = [
-        // Бул жерди бош калтырсаңыз болот же серверден чыныгы маалымат келбесе, көрсөтүү үчүн калтырыңыз
-    ];
 
 
     analyzeBtn.addEventListener('click', async function() {
         const symptoms = symptomsInput.value.trim();
 
         if (!symptoms) {
-            showError('Сураныч, белгилериңизди жазыңыз.');
+            showError('Please describe your symptoms.');
             return;
         }
 
@@ -132,147 +126,137 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ complaint: symptoms }), // Python күткөн 'complaint' ачкычы
+                body: JSON.stringify({ complaint: symptoms }),
             });
 
             if (!response.ok) {
-                let errorMsg = `Сервер катасы: ${response.status}`;
+                let errorMsg = `Server error: ${response.status}`;
                 try {
                     const errorData = await response.json();
-                    errorMsg = errorData.error_ky || errorData.error || errorMsg; // <--- ӨЗГӨРТҮЛДҮ
-                } catch (e) { /* JSON парсинг катасы болсо, унчукпай коёбуз */ }
+                    errorMsg = errorData.error || errorMsg; // Use the English error key
+                } catch (e) { /* Ignore JSON parsing error */ }
                 throw new Error(errorMsg);
             }
 
             const data = await response.json();
-            resultsSection.classList.remove('hidden');
-            errorSection.classList.add('hidden'); // Ийгиликтүү болсо, катаны жашыруу
-
-            // --- Натыйжаларды көрсөтүү ---
-
-            // Шашылыш деңгээли
-            const backendUrgencyKey = data.predicted_urgency_ky || 'Аныкталган жок'; // <--- ӨЗГӨРТҮЛДҮ
-            const urgencyInfo = urgencyMapping[backendUrgencyKey] || urgencyMapping['Аныкталган жок'];
-
-            severityProgress.style.width = urgencyInfo.severityScore + '%';
-            severityText.textContent = urgencyInfo.text; // Бул badge үчүн
-            severityBadge.className = `px-4 py-1 rounded-full text-sm font-medium ${urgencyInfo.badgeColor}`;
-            if (urgencyInfo.severityScore > 0) { // <--- ӨЗГӨРТҮЛДҮ: Эгер белгисиз болсо, badge'ди көрсөтпөө
-                 severityBadge.classList.remove('hidden');
-            } else {
-                 severityBadge.classList.add('hidden');
-            }
-
-
-            const urgencyDetails = urgencyLevelsDetails[urgencyInfo.key];
-            urgencyTextEl.textContent = urgencyDetails.text; // Бул өзүнчө блок үчүн
-            urgencyDescriptionEl.textContent = urgencyDetails.description;
-            urgencyIconEl.className = `${urgencyDetails.icon} text-4xl mb-2`;
-
-
-            if (urgencyInfo.key === 'immediate') {
-                emergencyWarning.classList.remove('hidden');
-            } else {
-                emergencyWarning.classList.add('hidden');
-            }
-
-            // Сунушталган адис
-            const backendSpecialistRaw = data.predicted_specialist_ky || 'Аныкталган жок'; // <--- ӨЗГӨРТҮЛДҮ
-            const backendSpecialistLC = backendSpecialistRaw.toLowerCase(); // Салыштыруу үчүн кичине тамгага
-            const specialistInfo = specialistsData[backendSpecialistLC] || specialistsData['не определено'];
-
-            let specialistDisplayName = backendSpecialistRaw.charAt(0).toUpperCase() + backendSpecialistRaw.slice(1);
-            if (backendSpecialistRaw === 'Аныкталган жок') specialistDisplayName = 'Аныкталган жок';
-
-
-            specialistName.textContent = specialistDisplayName;
-            specialistDescription.textContent = specialistInfo.description;
-            specialistIcon.className = `${specialistInfo.icon} text-4xl mb-2`;
-
-
-            // Толук талдоо бөлүмү
-            detailedAnalysisContainer.innerHTML = ''; // Эски мазмунду тазалоо
-
-            originalComplaintTextEl.textContent = `Баштапкы арыз: ${data.complaint_original_ky || symptoms}`; // <--- ӨЗГӨРТҮЛДҮ
-            detailedAnalysisContainer.appendChild(originalComplaintTextEl);
-
-            if (data.complaint_enhanced_ky && data.complaint_enhanced_ky !== "Жакшыртуу колдонулган жок же өзгөргөн жок") { // <--- ӨЗГӨРТҮЛДҮ
-                enhancedComplaintTextEl.textContent = `AI жакшырткан арыз: ${data.complaint_enhanced_ky}`;
-                detailedAnalysisContainer.appendChild(enhancedComplaintTextEl);
-            }
-
-            processedComplaintTextEl.textContent = `Модель үчүн иштетилген арыз: ${data.complaint_processed_for_model_ky || 'маалымат жок'}`; // <--- ӨЗГӨРТҮЛДҮ
-            detailedAnalysisContainer.appendChild(processedComplaintTextEl);
-
-            // Gemini'ден алынган түшүндүрмөлөр
-            geminiExplanationEl.innerHTML = ''; // Тазалоо
-            if (data.gemini_explanation_ky && data.gemini_explanation_ky !== "Түшүндүрмө түзүлгөн жок.") { // <--- ӨЗГӨРТҮЛДҮ
-                const explanationTitle = document.createElement('h4');
-                explanationTitle.className = 'font-semibold text-cyan-400 mt-3 mb-1';
-                explanationTitle.textContent = 'AI Түшүндүрмөсү:';
-                geminiExplanationEl.appendChild(explanationTitle);
-                const explanationP = document.createElement('p');
-                explanationP.textContent = data.gemini_explanation_ky;
-                geminiExplanationEl.appendChild(explanationP);
-            }
-
-            if (data.gemini_follow_up_questions_ky && data.gemini_follow_up_questions_ky.length > 0) { // <--- ӨЗГӨРТҮЛДҮ
-                const questionsTitle = document.createElement('h4');
-                questionsTitle.className = 'font-semibold text-cyan-400 mt-3 mb-1';
-                questionsTitle.textContent = 'Тактоочу суроолор:';
-                geminiExplanationEl.appendChild(questionsTitle);
-                const questionsUl = document.createElement('ul');
-                questionsUl.className = 'list-disc list-inside ml-4';
-                data.gemini_follow_up_questions_ky.forEach(q => {
-                    const li = document.createElement('li');
-                    li.textContent = q;
-                    questionsUl.appendChild(li);
-                });
-                geminiExplanationEl.appendChild(questionsUl);
-            }
-
-            if (data.gemini_general_advice_ky) { // <--- ӨЗГӨРТҮЛДҮ
-                const adviceTitle = document.createElement('h4');
-                adviceTitle.className = 'font-semibold text-cyan-400 mt-3 mb-1';
-                adviceTitle.textContent = 'Жалпы кеңеш:';
-                geminiExplanationEl.appendChild(adviceTitle);
-                const adviceP = document.createElement('p');
-                adviceP.textContent = data.gemini_general_advice_ky;
-                geminiExplanationEl.appendChild(adviceP);
-            }
-            detailedAnalysisContainer.appendChild(geminiExplanationEl);
-
-
-            // "Ыктымалдуу абалдар" (демо)
-            conditionsList.innerHTML = ''; // Эскисин тазалоо
-            // Бул жерде серверден чыныгы ыктымалдуу абалдарды алса болот, азырынча үлгү
-            if (sampleConditions.length > 0) {
-                 sampleConditions.forEach(condition => {
-                    // ... (сиздин мурунку код бул жерде, өзгөрүүсүз)
-                });
-            } else {
-                const noConditionsMsg = document.createElement('p');
-                noConditionsMsg.className = 'text-sm text-gray-400';
-                noConditionsMsg.textContent = 'Азырынча ыктымалдуу абалдар боюнча маалымат жок.';
-                conditionsList.appendChild(noConditionsMsg);
-            }
-
+            displayResults(data, symptoms);
 
         } catch (error) {
-            console.error('Талдоо учурунда ката кетти:', error);
-            showError(`Ката: ${error.message}. Сураныч, кайталап көрүңүз же сервер иштеп жатканын текшериңиз.`);
+            console.error('Error during analysis:', error);
+            showError(`Error: ${error.message}. Please try again or check if the server is running.`);
             resultsSection.classList.add('hidden');
         } finally {
             setLoadingState(false);
         }
     });
 
+    function displayResults(data, originalSymptoms) {
+        resultsSection.classList.remove('hidden');
+        errorSection.classList.add('hidden'); // Hide error on success
+
+        // --- Display Urgency Level ---
+        const backendUrgencyKey = data.predicted_urgency || 'Undetermined';
+        const urgencyInfo = urgencyMapping[backendUrgencyKey] || urgencyMapping['Undetermined'];
+
+        severityProgress.style.width = urgencyInfo.severityScore + '%';
+        severityText.textContent = urgencyInfo.text; // For the badge
+        severityBadge.className = `px-4 py-1 rounded-full text-sm font-medium ${urgencyInfo.badgeColor}`;
+        severityBadge.classList.toggle('hidden', urgencyInfo.severityScore === 0);
+
+        const urgencyDetails = urgencyLevelsDetails[urgencyInfo.key];
+        urgencyTextEl.textContent = urgencyDetails.text; // For the dedicated block
+        urgencyDescriptionEl.textContent = urgencyDetails.description;
+        urgencyIconEl.className = `${urgencyDetails.icon} text-4xl mb-2`;
+
+        emergencyWarning.classList.toggle('hidden', urgencyInfo.key !== 'immediate');
+
+        // --- Display Recommended Specialist ---
+        const backendSpecialistRaw = data.predicted_specialist || 'Undetermined';
+        const backendSpecialistLC = backendSpecialistRaw.toLowerCase(); // For matching keys
+        const specialistInfo = specialistsData[backendSpecialistLC] || specialistsData['undetermined'];
+
+        // Capitalize each word for display
+        let specialistDisplayName = backendSpecialistRaw.split('/')
+            .map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('/');
+
+        specialistName.textContent = specialistDisplayName;
+        specialistDescription.textContent = specialistInfo.description;
+        specialistIcon.className = `${specialistInfo.icon} text-4xl mb-2`;
+
+        // --- Display Detailed Analysis Section ---
+        detailedAnalysisContainer.innerHTML = ''; // Clear previous content
+
+        originalComplaintTextEl.textContent = `Original Complaint: ${data.complaint_original || originalSymptoms}`;
+        detailedAnalysisContainer.appendChild(originalComplaintTextEl);
+
+        if (data.complaint_enhanced && data.complaint_enhanced !== "Enhancement not applied or no changes made.") {
+            enhancedComplaintTextEl.textContent = `AI Enhanced Complaint: ${data.complaint_enhanced}`;
+            detailedAnalysisContainer.appendChild(enhancedComplaintTextEl);
+        }
+
+        processedComplaintTextEl.textContent = `Processed for Model: ${data.complaint_processed_for_model || 'no data'}`;
+        detailedAnalysisContainer.appendChild(processedComplaintTextEl);
+
+        // --- Display Gemini's Enriched Response ---
+        geminiExplanationEl.innerHTML = ''; // Clear
+        let contentAdded = false;
+
+        if (data.gemini_explanation && data.gemini_explanation !== "Explanation could not be generated.") {
+            addDetailedSection('AI Explanation:', [data.gemini_explanation], 'p');
+            contentAdded = true;
+        }
+
+        if (data.gemini_follow_up_questions && data.gemini_follow_up_questions.length > 0) {
+             addDetailedSection('Follow-up Questions:', data.gemini_follow_up_questions, 'ul');
+             contentAdded = true;
+        }
+
+        if (data.gemini_general_advice) {
+             addDetailedSection('General Advice:', [data.gemini_general_advice], 'p');
+             contentAdded = true;
+        }
+
+        if (contentAdded) {
+            detailedAnalysisContainer.appendChild(geminiExplanationEl);
+        }
+
+        // --- Display "Possible Conditions" (Demo) ---
+        conditionsList.innerHTML = ''; // Clear old list
+        const noConditionsMsg = document.createElement('p');
+        noConditionsMsg.className = 'text-sm text-gray-400';
+        noConditionsMsg.textContent = 'Information on possible conditions is not yet available.';
+        conditionsList.appendChild(noConditionsMsg);
+    }
+
+    function addDetailedSection(title, items, listType) {
+        const titleEl = document.createElement('h4');
+        titleEl.className = 'font-semibold text-cyan-400 mt-3 mb-1';
+        titleEl.textContent = title;
+        geminiExplanationEl.appendChild(titleEl);
+
+        if (listType === 'ul') {
+            const listEl = document.createElement('ul');
+            listEl.className = 'list-disc list-inside ml-4';
+            items.forEach(itemText => {
+                const li = document.createElement('li');
+                li.textContent = itemText;
+                listEl.appendChild(li);
+            });
+            geminiExplanationEl.appendChild(listEl);
+        } else { // 'p'
+            const p = document.createElement('p');
+            p.textContent = items[0];
+            geminiExplanationEl.appendChild(p);
+        }
+    }
+
+
     function setLoadingState(isLoading) {
         analyzeBtn.disabled = isLoading;
         if (isLoading) {
-            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Талдап жатат...';
+            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analyzing...';
         } else {
-            analyzeBtn.innerHTML = '<i class="fas fa-redo mr-2"></i> Кайра талдоо';
+            analyzeBtn.innerHTML = '<i class="fas fa-redo mr-2"></i> Analyze Again';
         }
     }
 
@@ -280,8 +264,4 @@ document.addEventListener('DOMContentLoaded', function() {
         errorMessageEl.textContent = message;
         errorSection.classList.remove('hidden');
     }
-
-    // typeWriter функциясы калды, бирок эми түз колдонулбайт, анткени маалымат дароо чыгат
-    // Эгер "жазып жаткан" эффект керек болсо, кайра кошсоңуз болот
-    // function typeWriter(text, element, speed = 20, i = 0) { ... }
 });

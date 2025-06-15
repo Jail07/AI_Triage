@@ -1,0 +1,113 @@
+complaint;urgency_category;doctor_referral
+I have severe chest pain, I can't breathe;Red;Cardiologist
+I have had a temperature of 39°C for three days, a severe cough, and my body aches;Orange;General Practitioner
+The mole on my back has changed, I want to get it checked;Green;Dermatologist
+My child's ear hurts and has a temperature of 37.8°C;Orange;ENT (Otolaryngologist)
+I fell off my bicycle, my knee hurts, I can't walk;Orange;Surgeon/Traumatologist
+Scheduled check-up with a gynecologist;Green;Gynecologist
+I've had a cough and a runny nose for a week, but no fever;Yellow;General Practitioner
+I have a severe headache, and my left arm is numb;Red;Neurologist
+I have a sharp, stabbing pain on the left side of my chest, it radiates to my arm, and I've had difficulty breathing for an hour;Red;Cardiologist
+My child has had a temperature of 38.5°C for two days, is weak, has a runny nose, and a slight cough;Orange;Pediatrician
+I want to make an appointment with a gynecologist, I have a slight pulling pain in my lower abdomen;Yellow;Gynecologist
+I cut my finger with a knife, the bleeding hasn't stopped for 30 minutes;Red;Surgeon
+My throat hurts, it's hard to swallow, and it's especially scratchy in the morning;Yellow;General Practitioner
+I get dizzy when I stand up quickly, I almost fall — this has been happening for several days;Yellow;Neurologist
+I have a severe toothache, the gum is swollen, it hurts a lot when I eat;Orange;Dentist
+A rash appeared on my skin and it itches, it hasn't gone away for two days;Yellow;Dermatologist
+My back started hurting after physical activity, the pain radiates to my leg;Yellow;Neurologist
+I have a frequent urge to urinate, a burning sensation, and a bad smell;Orange;Urologist
+A new dark spot has appeared on my leg, similar to a mole;Green;Dermatologist
+My back hurts severely after falling down the stairs, it's hard to stand up, it hurts when I move;Orange;Surgeon/Traumatologist
+I feel dizzy and vomit in the morning, I can't stand up straight;Red;Neurologist
+I'm planning to have a check-up with a gynecologist, my periods are sometimes irregular;Green;Gynecologist
+My child has had a dry cough for two days, it gets worse at night, no fever, but a sore throat;Yellow;Pediatrician
+My right side has been hurting constantly for a week, especially after eating;Orange;General Practitioner
+My throat suddenly became sore, I can barely speak, I have a high fever and chills;Orange;General Practitioner
+I have a severe burning sensation when I urinate, I run to the toilet frequently, the smell is unpleasant;Orange;Urologist
+My eye is red, watery, sensitive to light, it feels like something is in it;Orange;Ophthalmologist
+I've had diarrhea since yesterday, 5-6 times a day, my stomach is cramping;Yellow;General Practitioner
+My child has a red rash on their body that itches, especially at night;Yellow;Pediatrician/Dermatologist
+The elbow on my right arm is swollen and hurts a lot when I move it, it started after lifting something;Yellow;Surgeon/Traumatologist
+I'm constantly tired, have no interest in anything, have trouble sleeping, and no appetite;Yellow;General Practitioner/Neurologist
+The burn on my arm is red, a blister has formed, and it stings to the touch;Orange;Surgeon
+My child has small white spots on their face, this hasn't happened before;Green;Pediatrician/Dermatologist
+My heart beats very fast, I feel short of breath, and dizzy. This starts suddenly.;Red;Cardiologist
+The nail on my big toe is growing inwards, it's red and has pus;Yellow;Surgeon
+My ears have been ringing for two days, and I've started to hear poorly;Yellow;ENT (Otolaryngologist)
+My allergies are acting up, I'm sneezing, my nose is stuffy, and my eyes are itchy;Yellow;Allergist/General Practitioner
+I wake up with a swollen face in the morning, especially around my eyes, I might have kidney problems;Orange;General Practitioner/Nephrologist
+The glands under my jaw are swollen and painful to the touch, I have a slight fever;Yellow;General Practitioner
+My child's tongue is coated in white, and there are white spots inside the mouth, they cry when eating;Yellow;Pediatrician/Dentist
+It feels like something is stuck in my throat, it's hard to swallow, and my voice is hoarse;Yellow;ENT (Otolaryngologist)/General Practitioner
+I am constipated, I only have a bowel movement every two to three days, and it's with difficulty;Green;General Practitioner/Proctologist
+After lifting something heavy, my back hurt severely, the pain spread to my leg, and I couldn't walk;Orange;Neurologist/Surgeon
+My skin is dry, flaky, and itchy, especially after contact with water;Green;Dermatologist
+My blood pressure is 160/100, I have a headache, and my ears are ringing;Red;Cardiologist/General Practitioner
+Suddenly, the calf of my left leg became very painful, swollen, and red, it's hot to the touch;Red;Surgeon/Phlebologist
+My child got head lice from school, their head is very itchy;Green;Pediatrician/Dermatologist
+I am 2 months pregnant, I have severe morning sickness, I vomit in the morning and can't eat anything;Yellow;Gynecologist
+The filling in my tooth fell out, it doesn't hurt, but food gets stuck in it;Green;Dentist
+I suddenly lost consciousness and fell, now I have a headache and feel nauseous;Red;Neurologist/Traumatologist
+I see black spots and flashes in front of my eyes, and my vision has worsened;Orange;Ophthalmologist
+My right knee hurts, is swollen, and clicks when I walk, it's stiff in the morning;Yellow;Rheumatologist/Traumatologist
+I have a lot of acne on my face, it's purulent and painful;Yellow;Dermatologist
+My newborn's navel is red, oozing, and has an unpleasant smell;Orange;Pediatrician/Neonatologist
+I have heartburn after eating, and a sour taste in my mouth;Yellow;Gastroenterologist/General Practitioner
+I have genital itching and a white discharge with an odor;Yellow;Gynecologist (for women) / Urologist (for men)
+My cough hasn't gone away after the flu, it's been over two weeks, and my chest feels tight;Yellow;General Practitioner/Pulmonologist
+I grind my teeth at night, I wake up with jaw pain in the morning;Green;Dentist/Neurologist
+My child has severe abdominal pain, is restless and crying, vomiting, and has a fever;Orange;Pediatrician/Surgeon
+I've been depressed for a long time, I have no interest in anything, I feel bad;Yellow;Psychotherapist/Neurologist
+A blood test showed high sugar levels, I want to get checked;Green;Endocrinologist
+I have varicose veins on my legs, they swell and ache in the evening;Yellow;Phlebologist/Surgeon
+Sudden, severe pain in the upper right abdomen, accompanied by nausea and fever;Red;Surgeon/Gastroenterologist
+I feel a sudden 'pop' in my knee during sports, followed by intense pain and swelling;Orange;Traumatologist/Orthopedist
+I've been feeling extremely thirsty and urinating more than usual for the past month;Yellow;Endocrinologist/General Practitioner
+My vision in one eye became blurry suddenly, like a curtain falling;Red;Ophthalmologist
+Child swallowed a small toy, is coughing but can still breathe;Orange;Pediatrician/Emergency Room
+Feeling persistently sad, hopeless, and having thoughts of self-harm;Red;Psychiatrist/Psychotherapist
+Difficulty starting urination, weak stream, feeling like the bladder isn't empty;Yellow;Urologist
+I have a painful, blistering rash on one side of my torso;Orange;Dermatologist/General Practitioner
+My newborn's skin and eyes look yellow;Orange;Pediatrician/Neonatologist
+I've had a hoarse voice for over three weeks without any other cold symptoms;Yellow;ENT (Otolaryngologist)
+Forgot my own name and where I live for a short period;Red;Neurologist
+I am trying to get pregnant and missed my period by two weeks;Green;Gynecologist
+Sudden onset of flashing lights in vision, followed by a severe, one-sided headache;Orange;Neurologist
+My elderly parent is more confused and agitated than usual, especially in the evening;Orange;Geriatrician/Neurologist
+Pain and swelling in the big toe joint, it's red and hot;Orange;Rheumatologist/General Practitioner
+I am feeling constant pressure in my pelvis and have light, persistent vaginal bleeding outside of my period;Yellow;Gynecologist
+I found a lump in my breast during self-examination;Orange;Gynecologist/Surgeon
+My child has a high-pitched "barking" cough and makes a noisy sound when breathing in;Orange;Pediatrician
+I feel like my heart is skipping beats or fluttering in my chest;Yellow;Cardiologist
+I have unintentional weight loss of 15 pounds in the last 2 months;Orange;General Practitioner
+My hands tremble, I feel anxious, and I've noticed my eyes seem to be bulging;Yellow;Endocrinologist
+I am a construction worker and got a metal shard in my eye;Red;Ophthalmologist/Emergency Room
+Painful menstrual cramps that cause me to miss work every month;Yellow;Gynecologist
+My stool is black and tarry, and I feel very weak;Red;Gastroenterologist/Emergency Room
+I have numbness and tingling that started in my feet and is now moving up my legs;Orange;Neurologist
+I have been trying to conceive for over a year without success;Green;Gynecologist/Fertility Specialist
+My child has developed a limp but doesn't recall any injury;Yellow;Pediatrician/Orthopedist
+I have heartburn that doesn't go away with over-the-counter medicine and it's waking me up at night;Yellow;Gastroenterologist
+I have muscle weakness all over my body, it's getting harder to climb stairs;Orange;Neurologist
+My partner says I stop breathing for short periods while I sleep;Yellow;Pulmonologist/Sleep Specialist
+I have a persistent, dry, hacking cough and shortness of breath, especially with exercise;Yellow;Pulmonologist
+I am planning an international trip and need vaccinations;Green;General Practitioner/Travel Clinic
+My face drooped on one side and I couldn't speak clearly for a few minutes;Red;Neurologist
+I have severe heel pain, especially with the first steps in the morning;Yellow;Podiatrist/Orthopedist
+I feel a constant need to clear my throat and have a sour taste in the back of my mouth;Green;Gastroenterologist/ENT
+My child is significantly behind on developmental milestones (walking, talking);Yellow;Pediatrician/Developmental Specialist
+I have pain in my wrist and a 'clicking' sound when I turn it, I use the computer all day;Green;Orthopedist/General Practitioner
+I've been on a new medication and developed an itchy, full-body rash;Orange;Allergist/General Practitioner
+I have blood in my urine but no pain;Orange;Urologist/Nephrologist
+My fingers turn white, then blue, then red when I'm cold or stressed;Green;Rheumatologist
+I am post-menopausal and experienced vaginal bleeding;Orange;Gynecologist
+My child has foul-smelling, pale, and bulky stools and is not gaining weight;Yellow;Pediatrician/Gastroenterologist
+I have intense itching in the anal area, especially at night;Green;General Practitioner/Proctologist
+I am a diabetic and have a sore on my foot that isn't healing;Orange;Podiatrist/Endocrinologist
+I am experiencing erectile dysfunction;Green;Urologist/General Practitioner
+I have double vision and my eyelids are drooping;Orange;Neurologist/Ophthalmologist
+I have severe, cracking pain at the corners of my mouth;Green;Dermatologist/General Practitioner
+I am worried about my alcohol consumption and want help cutting back;Yellow;General Practitioner/Addiction Specialist
+My mood swings are extreme, from very high energy to deep depression;Orange;Psychiatrist
+I have a painless swelling in my neck that has been growing for weeks;Yellow;General Practitioner/ENT
